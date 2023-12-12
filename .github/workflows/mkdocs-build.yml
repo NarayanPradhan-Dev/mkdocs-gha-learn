@@ -1,0 +1,17 @@
+name: Build mkdocs
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+      - name: install mkdocs
+        run: pip install mkdocs
+      - name: Build the site
+        run: mkdocs build
+      - name: listing the site
+        run: ls site
