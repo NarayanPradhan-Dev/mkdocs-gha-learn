@@ -1,16 +1,22 @@
 name: deploy site
 
 on: push
+        
+env:
+  PAT: ${{ secrets.PAT }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      -name: checkout repo
-      uses: actions/checkout@v3
-      with:
-        token: ${{ steps.deployment.output.page_url }}
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: insall mkdocs
+        run: pip install mkdocs
 
       - name: compile and generate the files
         run: mkdocs build
@@ -22,8 +28,8 @@ jobs:
           git add -A
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Action"
+          git config --global http.sslverify false
           git commit -m "Deploy"
+          git branch -M main
+          git push https://narayan-pradhan:${{ secrets.PAT }}@github.com/NarayanPradhan-Dev/mkdocs-gha-learn.git main:gh-pages
 
-      - name: force push to destination branch
-        run: |
-          git push -f https://github.com/NarayanPradhan-Dev/mkdocs-gha-learn.git main:gh-pages
